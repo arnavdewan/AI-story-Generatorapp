@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Story Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="page-home">
+
+  <div class="container">
+    <h1>📝 AI Story Generator</h1>
+    <textarea id="prompt" placeholder="Enter your story idea..."></textarea>
+    <button onclick="generateStory()">Generate Story</button>
+
+    <h2>Your AI Story:</h2>
+    <div id="story" class="story-box"></div>
+  </div>
+
+  <script>
+    async function generateStory() {
+      const prompt = document.getElementById("prompt").value.trim();
+      const storyBox = document.getElementById("story");
+      storyBox.textContent = "Generating story...";
+
+      try {
+        const response = await fetch("/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        });
+
+        const data = await response.json();
+        storyBox.textContent = data.story || "No story generated.";
+      } catch (err) {
+        storyBox.textContent = "❌ Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
